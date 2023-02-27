@@ -1,52 +1,64 @@
 package br.com.alura.school.course;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import static javax.persistence.GenerationType.IDENTITY;
+import br.com.alura.school.enrollment.Enrollment;
 
 @Entity
-class Course {
+public class Course {
 
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	private Long id;
 
-    @Size(max=10)
-    @NotBlank
-    @Column(nullable = false, unique = true)
-    private String code;
+	@Size(max = 10)
+	@NotBlank
+	@Column(nullable = false, unique = true)
+	private String code;
 
-    @Size(max=20)
-    @NotBlank
-    @Column(nullable = false, unique = true)
-    private String name;
+	@Size(max = 20)
+	@NotBlank
+	@Column(nullable = false, unique = true)
+	private String name;
 
-    private String description;
+	private String description;
 
-    @Deprecated
-    protected Course() { }
+	@OneToMany(mappedBy = "course")
+	private List<Enrollment> enrollment;
 
-    Course(String code, String name, String description) {
-        this.code = code;
-        this.name = name;
-        this.description = description;
-    }
+	@Deprecated
+	protected Course() {
+	}
 
-    String getCode() {
-        return code;
-    }
+	Course(String code, String name, String description) {
+		this.code = code;
+		this.name = name;
+		this.description = description;
+	}
 
-    String getName() {
-        return name;
-    }
+	String getCode() {
+		return code;
+	}
 
-    String getDescription() {
-        return description;
-    }
+	public String getName() {
+		return name;
+	}
 
+	String getDescription() {
+		return description;
+	}
+
+	void addEnrollment(Enrollment newEnrollment) {
+		this.enrollment.add(newEnrollment);
+	}
 }

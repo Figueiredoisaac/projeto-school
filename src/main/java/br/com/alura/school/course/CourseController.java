@@ -1,18 +1,20 @@
 package br.com.alura.school.course;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.String.format;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestController
-class CourseController {
+public class CourseController {
 
     private final CourseRepository courseRepository;
 
@@ -22,7 +24,15 @@ class CourseController {
 
     @GetMapping("/courses")
     ResponseEntity<List<CourseResponse>> allCourses() {
-        return ResponseEntity.ok().build();
+    	List<Course> allCourses = courseRepository.findAll();
+    	if (allCourses.isEmpty() == true) {
+    		throw new ResponseStatusException(HttpStatus.NO_CONTENT, format("No courses found"));
+    	}
+    	List<CourseResponse> responseList = new ArrayList<CourseResponse>();
+    	allCourses.forEach(course -> {
+    		responseList.add(new CourseResponse(course));
+    	});
+        return ResponseEntity.ok(responseList);
     }
 
     @GetMapping("/courses/{code}")

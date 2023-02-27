@@ -1,5 +1,3 @@
-DROP TABLE IF EXISTS enrollment;
-
 DROP TABLE IF EXISTS User;
 
 CREATE TABLE User (
@@ -15,13 +13,4 @@ CREATE TABLE Course (
     code VARCHAR(10) NOT NULL UNIQUE,
     name VARCHAR(20) NOT NULL UNIQUE,
     description VARCHAR(500)
-);
-
-CREATE TABLE enrollment (
-  enrollment_number BIGINT AUTO_INCREMENT PRIMARY KEY,
-  user_id BIGINT NOT NULL,
-  course_id BIGINT NOT NULL,
-  date DATETIME NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES user (id),
-  FOREIGN KEY (course_id) REFERENCES course (id)
 );

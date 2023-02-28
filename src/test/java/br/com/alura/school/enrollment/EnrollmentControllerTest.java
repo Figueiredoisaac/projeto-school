@@ -125,16 +125,20 @@ public class EnrollmentControllerTest {
 	    
 	    @Test
 	    void should_return_multiple_users_enrolled() throws Exception {
-	    	Course courseTest = new Course("java-test","Java Teste","Um curso de teste Java");
-	        courseRepository.save(courseTest);
+	    	Course courseJavaTest = new Course("java-test","Java Teste","Um curso de Java");
+	        courseRepository.save(courseJavaTest);
+	        Course courseAnotherJava = new Course("java-test2","Outro Java","Outro curso Java");
+	        courseRepository.save(courseAnotherJava);
 	        User userTestIsaac = new User("isaac","isaac@email.com");
 	        userRepository.save(userTestIsaac);
 	        User userTestAlex = new User("alex","alex@email.com");
 	        userRepository.save(userTestAlex);
-	        Enrollment enrollmentTestIsaac = new Enrollment(userTestIsaac, courseTest);
-	        enrollmentRepository.save(enrollmentTestIsaac);
-	        Enrollment enrollmentTestAlex = new Enrollment(userTestAlex, courseTest);
-	        enrollmentRepository.save(enrollmentTestAlex);
+	        Enrollment enrollmentTestIsaacJava = new Enrollment(userTestIsaac, courseJavaTest);
+	        enrollmentRepository.save(enrollmentTestIsaacJava);
+	        Enrollment enrollmentTestAlexAnother = new Enrollment(userTestAlex, courseAnotherJava);
+	        enrollmentRepository.save(enrollmentTestAlexAnother);
+	        Enrollment enrollmentTestIsaacAnother = new Enrollment(userTestIsaac, courseAnotherJava);
+	        enrollmentRepository.save(enrollmentTestIsaacAnother);
 	        
 	    	mockMvc.perform(get("/courses/enroll/report")
 	    			.accept(MediaType.APPLICATION_JSON))
@@ -142,7 +146,7 @@ public class EnrollmentControllerTest {
 			    	.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			    	.andExpect(jsonPath("$.length()", is(2)))
 		            .andExpect(jsonPath("$[0].email", is("isaac@email.com")))
-	    			.andExpect(jsonPath("$[0].quantidade_matriculas", is(1)))
+	    			.andExpect(jsonPath("$[0].quantidade_matriculas", is(2)))
 	    			.andExpect(jsonPath("$[1].email", is("alex@email.com")))
 	    			.andExpect(jsonPath("$[1].quantidade_matriculas", is(1)));
 	    }

@@ -71,9 +71,14 @@ public class EnrollmentController {
 			allUsers.forEach(user -> {
 				String email = user.getEmail();
 				Long countEnrollment = enrollmentRepository.countByUser(user);
-				EnrollmentReportResponse newReport = new EnrollmentReportResponse(email, countEnrollment);
-				response.add(newReport);
+				if (countEnrollment > 0) {
+					EnrollmentReportResponse newReport = new EnrollmentReportResponse(email, countEnrollment);
+					response.add(newReport);
+				}
 			});
+			if (response.size() == 0) {
+				throw new ResponseStatusException(HttpStatus.NO_CONTENT, format("No users found"));
+			}
 			return ResponseEntity.ok(response);
 		} else {
 			throw new ResponseStatusException(HttpStatus.NO_CONTENT, format("No users found"));
